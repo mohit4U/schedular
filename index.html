@@ -1,0 +1,79 @@
+<!doctype html>
+<html ng-app="schedularApp">
+    <head>
+        <meta charset="utf-8">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Schedular</title>
+        <style>
+        	.displayTable {
+        		position: absolute;
+        		top: 0;
+        		left: 0;
+        	}
+        </style>
+    </head>
+    <body ng-controller="schedularCtrl">
+    	<div id="schedularContainer" style="width: 500px; overflow: hidden; position: relative;">
+			<table>
+				<tr ng-repeat="row in list">
+					<td style="width: 100px; height: 50px; background-color: #eee; text-align: center;" rowspan="{{col.span}}" ng-repeat="col in row.cols">
+						{{$index}} <br>
+						<button ng-click="changeSpan($parent.$index, $index, 1);">+</button>
+						<button ng-click="changeSpan($parent.$index, $index, -1);">-</button>
+					</td>
+				</tr>
+			</table>
+			<!-- <table class="displayTable">
+				<tr ng-repeat="row in list">
+					<td style="width: 100px; height: 50px; background-color: transparent;" colspan="col.span" ng-repeat="col in row.cols"></td>
+				</tr>
+			</table> -->  
+    	</div>
+    	<script src="bower_components/angular/angular.min.js"></script>
+
+    	<script>
+    		angular.module('schedularApp', [])
+    		.controller('schedularCtrl', ['$scope', function($scope){
+    			console.log('schedularCtrl is loaded');
+
+    			var vm = $scope;
+    			vm.list = [
+    				{cols: [{span: 1}, {span: 1}, {span: 1}, {span: 1}, {span: 1}, {span: 1}]},
+    				{cols: [{span: 1}, {span: 1}, {span: 1}, {span: 1}, {span: 1}, {span: 1}]},
+    				{cols: [{span: 1}, {span: 1}, {span: 1}, {span: 1}, {span: 1}, {span: 1}]},
+    				{cols: [{span: 1}, {span: 1}, {span: 1}, {span: 1}, {span: 1}, {span: 1}]},
+    				{cols: [{span: 1}, {span: 1}, {span: 1}, {span: 1}, {span: 1}, {span: 1}]},
+    				{cols: [{span: 1}, {span: 1}, {span: 1}, {span: 1}, {span: 1}, {span: 1}]},
+    				{cols: [{span: 1}, {span: 1}, {span: 1}, {span: 1}, {span: 1}, {span: 1}]},
+    				{cols: [{span: 1}, {span: 1}, {span: 1}, {span: 1}, {span: 1}, {span: 1}]},
+    				{cols: [{span: 1}, {span: 1}, {span: 1}, {span: 1}, {span: 1}, {span: 1}]},
+    				{cols: [{span: 1}, {span: 1}, {span: 1}, {span: 1}, {span: 1}, {span: 1}]}
+    			];
+    			setTimeout(function(){
+    				console.log('calculated witdh ---> ', vm.list[0].cols.length*100);
+    				console.log('before ---> ', document.getElementById("schedularContainer").style.width);
+	    			document.getElementById("schedularContainer").style.width = vm.list[0].cols.length*100 + 'px';
+    				console.log('after ---> ', document.getElementById("schedularContainer").style.width);
+    			});
+
+    			vm.changeSpan = function(row, col, count){
+    				console.log(row, col, count);
+    				vm.list[row].cols[col].span += count;
+    				
+    				if(vm.list[row].cols[col].span == 0){
+    					vm.list[row].cols[col].span++;
+    				}else{
+    					if(count > 0){
+    						if(vm.list[row+vm.list[row].cols[col].span-1])
+		    					vm.list[row+vm.list[row].cols[col].span-1].cols.pop();
+    					}else{
+    						if(vm.list[row+vm.list[row].cols[col].span])
+		    					vm.list[row+vm.list[row].cols[col].span].cols.push({});
+    					}
+    				}
+    			};
+    		}]);
+    	</script>
+    </body>
+</html>
